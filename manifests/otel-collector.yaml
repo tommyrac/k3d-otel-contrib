@@ -1,0 +1,32 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: collector
+  namespace: opentelemetry-operator-system
+spec:
+  mode: deployment
+  config: |
+    receivers:
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: 'redis'
+              static_configs:
+                - targets: ['redis-exporter.default.svc.cluster.local:9121']
+            - job_name: 'nginx'
+              static_configs:
+                - targets: ['nginx-exporter.default.svc.cluster.local:9113']
+
+    processors:
+      batch: {}
+
+    exporters:
+      debug:
+        verbosity: detailed
+
+    service:
+      pipelines:
+        metrics:
+          receivers: [prometheus]
+          processors: [batch]
+          exporters: [debug]
