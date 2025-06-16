@@ -1,0 +1,1 @@
+This setup is using the otel-contrib image at the cluster level, exporting straight to datadog
